@@ -1,0 +1,36 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Secret</title>
+  <meta name="description" content="Secret project">
+  <meta name="author" content="Norbert Balogh">
+  <meta name="uid" content="{{session['uid']}}">
+
+  <link rel="stylesheet" href="{{url_for('static',filename='master.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script type="text/javascript" src="{{url_for('static',filename='game.js')}}"></script>
+</head>
+
+<body>
+  <h1> Secret project</h1>
+  {% if 0<num<=4 %}
+  {% for i in range(num) %}
+  {% if size>0 %}
+  <table id="board" data-id={{i}}>
+    {% for y in range(size) %}
+    <tr>
+      {% for x in range(size) %}
+        <td> </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+</body>
+</html>

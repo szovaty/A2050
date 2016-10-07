@@ -1,0 +1,14 @@
+#board{
+  border:2px solid gray;
+  table-layout: fixed;
+  display: inline-block;
+}
+
+#board td{
+  vertical-align: middle;
+  text-align: center;
+  border: 2px solid black;
+  font-size: 20px;
+  width: 100px;
+  height:100px;
+}
