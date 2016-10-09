@@ -1,19 +1,17 @@
 from flask import render_template,request,session,redirect,url_for
-from app import app
+from db import User
 from forms import LoginForm
-from db import db,User
-import hashlib
+from app import app
 
 @app.route('/',methods=("GET","POST"))
 def login():
+    if "uid" in list(session.keys()):
+        return redirect(url_for("index"))
     form=LoginForm(request.form)
     if form.validate_on_submit():
         user=User.query.filter_by(nick=form.nick.data).first()
-        print(1)
         if user!= None:
-            print(2)
             if user.password==form.password.data:
-                print(3)
                 session["uid"]=user.id
                 return redirect(url_for("index"))
         else:
@@ -23,7 +21,7 @@ def login():
 @app.route('/game/')
 def index():
     if "uid" in list(session.keys()):
-        return render_template("index.html",size=4,num=2)
+        return render_template("index.html")
     else:
         return redirect(url_for("login"))
 

@@ -7,7 +7,6 @@
   <title>Secret</title>
   <meta name="description" content="Secret project">
   <meta name="author" content="Norbert Balogh">
-  <meta name="uid" content="{{session['uid']}}">
 
   <link rel="stylesheet" href="{{url_for('static',filename='master.css')}}">
   <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
@@ -17,20 +16,5 @@
 
 <body>
   <h1> Secret project</h1>
-  {% if 0<num<=4 %}
-  {% for i in range(num) %}
-  {% if size>0 %}
-  <table id="board" data-id={{i}}>
-    {% for y in range(size) %}
-    <tr>
-      {% for x in range(size) %}
-        <td> </td>
-      {% endfor %}
-    </tr>
-    {% endfor %}
-  </table>
-  {% endif %}
-  {% endfor %}
-  {% endif %}
 </body>
 </html>

@@ -1,10 +1,16 @@
-#board{
+div{
+  display:inline-block;
+  margin:10px;
+}
+
+.board{
   border:2px solid gray;
   table-layout: fixed;
   display: inline-block;
 }
 
-#board td{
+.board td{
+  background-color: white;
   vertical-align: middle;
   text-align: center;
   border: 2px solid black;

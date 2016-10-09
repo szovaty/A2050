@@ -1,8 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-from app import app
-
-app.config['SQLALCHEMY_DATABASE_URI']="mysql+pymysql://root:root@localhost/tbse"
-db = SQLAlchemy(app)
+from app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,13 +32,3 @@ class Game(db.Model):
     def __init__(self, user, board):
         self.user=user
         self.board=board
-
-class Move(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    game_id=db.Column(db.Integer, db.ForeignKey("game.id"))
-    game = db.relationship('Game',backref=db.backref('game', lazy='dynamic'))
-    move = db.Column(db.Integer,nullable=False)
-
-    def __init__(self,game,move):
-        self.game=game
-        self.move=move
