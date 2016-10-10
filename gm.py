@@ -1,4 +1,6 @@
 from os import remove
+from config import keymap
+
 def printBoard(game,includeid=True):
     if includeid:
         rtv=str(game.uid)
@@ -48,3 +50,34 @@ class GameManager:
             if game.uid==id:
                 with open(outputFolder+"out"+str(id),"w") as f:
                     f.write(printBoard(game,includeid=False))
+
+    def shift(self,id,ev):
+        for game in self.games:
+            if game.uid==id:
+                game.game.shift(keymap[ev])
+                return
+
+    def gameOver(self,id):
+        for game in self.games:
+            if game.uid==id:
+                return game.game._game_over
+
+    def getHightile(self,id):
+        for game in self.games:
+            if game.uid==id:
+                max=2
+                for line in game.game.board._board:
+                    for tile in line:
+                        if tile>max:
+                            max=tile
+                return int(pow(2,max))
+
+    def getPoints(self,id):
+        for game in self.games:
+            if game.uid==id:
+                return int(game.game.score)
+
+    def get(self,id):
+        for game in self.games:
+            if game.uid==id:
+                return game

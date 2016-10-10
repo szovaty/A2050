@@ -1,7 +1,7 @@
 from flask import render_template,request,session,redirect,url_for
 from db import User
 from forms import LoginForm
-from app import app
+from app import app,db
 
 @app.route('/',methods=("GET","POST"))
 def login():
@@ -29,3 +29,12 @@ def index():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+@app.route('/files/out<name>')
+def out(name):
+    u=User.query.filter_by(nick=name).first()
+    if u!=None and u.group>1:
+        with open("files/out"+str(u.id)) as f:
+            return f.readline()
+    else:
+        return "Somehting went wrong."

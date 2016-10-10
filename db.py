@@ -1,16 +1,21 @@
+import datetime
 from app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nick = db.Column(db.String(32),default="Unnamed player")
+    nick = db.Column(db.String(32),default="Unnamed player",nullable=False)
     password=db.Column(db.String(32),nullable=False)
     group = db.Column(db.Integer, default=0)
     points= db.Column(db.Integer, default=0)
 
-    def __init__(self,nick,email,group=0):
-        self.email = email
+    def __init__(self,nick="Unnamed player",password="pass",group=0):
+        self.nick=nick
+        self.password=password
         self.group=group
         self.points=0
+
+    def __repr__(self):
+        return self.nick
 
 
 class Team(db.Model):
@@ -26,9 +31,7 @@ class Game(db.Model):
     user = db.relationship('User',backref=db.backref('user', lazy='dynamic'))
     hightile = db.Column(db.Integer, default=2)
     points = db.Column(db.Integer,default=0)
-    end=db.Column(db.Boolean,default=False)
-    board=db.Column(db.String(16),nullable=False)
+    start = db.Column(db.DateTime,default=datetime.datetime.utcnow)
 
-    def __init__(self, user, board):
+    def __init__(self, user):
         self.user=user
-        self.board=board

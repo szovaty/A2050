@@ -1,10 +1,10 @@
 from flask import session
-from app import socketio, gm
+from app import socketio, gm, db
 from flask_socketio import send,emit,join_room,leave_room
 from config import keymap,isLoggedIn
 from g2048 import logic
 from gm import cGame,printBoard
-from db import User
+from db import User,Game
 
 room="game"
 
@@ -20,6 +20,9 @@ def conn():
             gm.addTable(ng)
         gm.genOutput(uid)
         u=User.query.get(uid)
+        g=Game(u)
+        db.session.add(g)
+        db.session.commit()
         emit("player_connect",(uid,u.nick),room=room)
         emit("bupdate",printBoard(ng))
         print("User #"+str(uid)+" connected")
@@ -41,9 +44,12 @@ def _input(data):
     uid=session["uid"]
     print("User #"+str(uid)+" issued input:",ev)
     if ev in list(keymap.keys()):
-        for game in gm.games:
-            if game.uid==uid:
-                game.game.shift(keymap[ev])
-                gm.genOutput(uid)
-                emit("bupdate",printBoard(game),room=room)
-                break
+        gm.shift(uid,ev)
+        gm.genOutput(uid)
+        if gm.gameOver(uid):
+            u=User.query.get(uid)
+            g=Game.query.filter_by(user=u).order_by(db.desc(Game.start)).first()
+            g.hightile=gm.getHightile(uid)
+            g.points=gm.getPoints(uid)
+            db.session.commit()
+        emit("bupdate",printBoard(gm.get(uid)),room=room)
