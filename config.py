@@ -18,3 +18,11 @@ def isLoggedIn():
         if u!= None:
             return True
     return False
+
+def isGuest():
+    if "uid" in list(session.keys()):
+        from db import User
+        u = User.query.get(session["uid"])
+        if u.group<=1:
+            return True
+    return False

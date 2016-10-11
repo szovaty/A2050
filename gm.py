@@ -1,4 +1,4 @@
-from os import remove
+
 from config import keymap
 
 def printBoard(game,includeid=True):
@@ -29,7 +29,6 @@ class GameManager:
     def removeTable(self,uid):
         for x,game in enumerate(self.games):
             if game.uid==uid:
-                remove(outputFolder+"out"+str(uid))
                 del self.games[x]
 
     def hasGameWithId(self,id):

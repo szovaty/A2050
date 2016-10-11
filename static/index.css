@@ -18,3 +18,21 @@ div{
   width: 100px;
   height:100px;
 }
+
+#scores{
+  position:fixed;
+  top:0px;
+  right:0px;
+  background-color: red;
+}
+
+#scores table{
+  border: black 2px solid;
+  table-layout: fixed;
+}
+
+#scores td{
+  border: black 2px solid;
+  width:120px;
+  height:30px;
+}

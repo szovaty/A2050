@@ -18,12 +18,13 @@ class User(db.Model):
         return self.nick
 
 
-class Team(db.Model):
+class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    points = db.Column(db.Integer, default=0)
+    start = db.Column(db.DateTime,default=datetime.datetime.utcnow,nullable=False)
+    games = db.Column(db.Integer,nullable=False,default=5)
 
-    def __init__(self):
-        self.points=0
+    def __init__(self,games):
+        self.games=games
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,3 +36,27 @@ class Game(db.Model):
 
     def __init__(self, user):
         self.user=user
+
+
+def calcScore(game):
+    return game.points+10*game.hightile
+
+def getSessionScores():
+    s=Session.query.order_by(db.desc(Session.start)).first()
+    if s != None:
+        date=s.start
+        g=Game.query.filter(Game.start>date).all()
+        users=User.query.all()
+        scores=dict()
+        for u in users:
+            scores[u.nick]=0
+            gc=0
+            for game in g:
+                if gc>=s.games:
+                    break;
+                if game.user==u:
+                    scores[u.nick]+=calcScore(game)
+                    gc+=1
+
+        return scores
+    return None

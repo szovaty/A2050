@@ -79,7 +79,9 @@ function updateTables(board){
   }
 }
 
-socket.on("bupdate",function(board){updateTables(board)});
+socket.on("bupdate",function(board){
+  updateTables(board);
+});
 
 socket.on("load_others",function(games){
   for(var i=0;i<games.length;i++){
@@ -99,12 +101,23 @@ socket.on("player_disconnect",function(uid){
   removeBoard(uid);
 });
 
-window.addEventListener("keydown",function(event){
-  var key=event.keyCode;
-  //if(key>=37 && key<=40)
-    socket.emit("input",{key:event.keyCode});
-});
+function genScores(data){
+  div=document.getElementById("scores");
+  tbl=document.createElement("TABLE");
+  row=tbl.insertRow();
+  row.insertCell().innerHTML="Name";
+  row.insertCell().innerHTML="Score";
+  keys=Object.keys(data);
+  for(var i=0;i<keys.length;i++){
+    row=tbl.insertRow();
+    row.insertCell().innerHTML=keys[i];
+    row.insertCell().innerHTML=data[keys[i]];
+  }
+  div.innerHTML="";
+  div.appendChild(tbl);
+}
 
-document.addEventListener("load",function(){
-  addBoard(1);
+socket.on("score_update",function(data){
+  console.log(data);
+  genScores(data);
 });

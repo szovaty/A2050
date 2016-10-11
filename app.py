@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from config import *
 from flask_wtf.csrf import CsrfProtect
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret
 app.config['SQLALCHEMY_DATABASE_URI']=DB_ADDRESS

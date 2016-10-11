@@ -9,18 +9,13 @@
   <meta name="author" content="Norbert Balogh">
 
   <link rel="stylesheet" href="{{url_for('static',filename='master.css')}}">
-  <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-  <script type="text/javascript" src="{{url_for('static',filename='game.js')}}"></script>
-  {% if not guest %}
-    <script type="text/javascript" src="{{url_for('static',filename='play.js')}}"></script>
-  {% endif %}
+  <link rel="stylesheet" href="{{url_for('static',filename='session.css')}}">
 </head>
 
 <body>
-  <h1>A2050</h1>
-  <div id="scores">
-    <table id="scr">
+  {% if scores != None %}
+    <h1>Current session scores</h1>
+    <table>
       <tr>
         <td>Name</td>
         <td>Score</td>
@@ -32,6 +27,13 @@
       </tr>
         {% endfor %}
     </table>
-  </div>
+  {% endif %}
+  {% if user.group==3 %}
+    <form method="POST" action="{{url_for('_session')}}">
+      {{form.count}}
+      {{form.submit}}
+      {{form.csrf_token}}
+    </form>
+  {% endif %}
 </body>
 </html>

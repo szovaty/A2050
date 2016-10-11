@@ -4,7 +4,7 @@ from flask_socketio import send,emit,join_room,leave_room
 from config import keymap,isLoggedIn
 from g2048 import logic
 from gm import cGame,printBoard
-from db import User,Game
+from db import User,Game,getSessionScores
 
 room="game"
 
@@ -18,7 +18,6 @@ def conn():
             ng=cGame(logic.Game(),uid)
             ng.game.new_game()
             gm.addTable(ng)
-        gm.genOutput(uid)
         u=User.query.get(uid)
         g=Game(u)
         db.session.add(g)
@@ -40,12 +39,13 @@ def dc():
 
 @socketio.on('input')
 def _input(data):
+    if not isLoggedIn():
+        return
     ev=data["key"]
     uid=session["uid"]
     print("User #"+str(uid)+" issued input:",ev)
     if ev in list(keymap.keys()):
         gm.shift(uid,ev)
-        gm.genOutput(uid)
         if gm.gameOver(uid):
             u=User.query.get(uid)
             g=Game.query.filter_by(user=u).order_by(db.desc(Game.start)).first()
@@ -53,3 +53,22 @@ def _input(data):
             g.points=gm.getPoints(uid)
             db.session.commit()
         emit("bupdate",printBoard(gm.get(uid)),room=room)
+        emit("score_update",getSessionScores(),room=room)
+
+@socketio.on("aictl")
+def _aictl(id):
+    game=gm.hasGameWithId(id)
+    if game==None:
+        return
+    session["uid"]=id
+    emit("airead",printBoard(game,includeid=False))
+
+@socketio.on("aiwrite")
+def _aiwrite(dir):
+    if isLoggedIn():
+        print(dir)
+        if dir in list(keymap.keys()):
+            gm.shift(session["uid"],dir)
+            back=printBoard(gm.hasGameWithId(session["uid"]),includeid=False)
+            emit("airead",back)
+            emit("bupdate",str(session["uid"])+" "+back,room=room)
