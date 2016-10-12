@@ -4,18 +4,19 @@ from time import sleep
 
 myId=1
 kmap={"UP":38,"DOWN":40,"LEFT":37,"RIGHT":39}
-
+count=1
 def algorithm(data):
-    sleep(0.1)
-    print(data)
+    global count
+    count+=1
+    print(count)
     dir=kmap["UP"]
 
     socketIO.emit("aiwrite",dir)
-    socketIO.wait(seconds=1)
+    #socketIO.wait(seconds=1)
 
-socketIO = SocketIO('diosd', 5000, LoggingNamespace)
+socketIO = SocketIO('desktop', 5000, LoggingNamespace)
 
 socketIO.on('airead', algorithm)
 
 socketIO.emit("aictl",myId)
-socketIO.wait(seconds=1)
+socketIO.wait()
